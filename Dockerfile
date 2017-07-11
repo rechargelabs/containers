@@ -25,11 +25,11 @@ RUN apt-get install --quiet --yes google-cloud-sdk=160.0.0-0 \
     && gcloud config set component_manager/disable_update_check true \
     && gcloud config set metrics/environment github_docker_image
 
-# Install GClound Components
+# Install GClound Components 160.0.0-0
 RUN apt-get install --quiet --yes \
-    google-cloud-sdk-app-engine-go \
-    google-cloud-sdk-app-engine-python \
-    google-cloud-sdk-datastore-emulator
+    google-cloud-sdk-app-engine-go=160.0.0-0 \
+    google-cloud-sdk-app-engine-python=160.0.0-0 \
+    google-cloud-sdk-datastore-emulator=160.0.0-0
 
 # Configure Bazel
 RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" \
