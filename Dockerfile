@@ -11,7 +11,8 @@ RUN apt-get update --quiet \
     git \
     lsb-release \
     python-dev \
-    python-setuptools
+    python-setuptools \
+    tzdata
 
 # Configure GCloud
 RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" \
