@@ -21,17 +21,17 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
     && apt-get update
 
-# Install GCloud 160.0.0-0
-RUN apt-get install --quiet --yes google-cloud-sdk=160.0.0-0 \
+# Install GCloud 181.0.0-0
+RUN apt-get install --quiet --yes google-cloud-sdk=181.0.0-0 \
     && gcloud config set core/disable_usage_reporting true \
     && gcloud config set component_manager/disable_update_check true \
     && gcloud config set metrics/environment github_docker_image
 
-# Install GCloud Components 160.0.0-0
+# Install GCloud Components 181.0.0-0
 RUN apt-get install --quiet --yes \
-    google-cloud-sdk-app-engine-go=160.0.0-0 \
-    google-cloud-sdk-app-engine-python=160.0.0-0 \
-    google-cloud-sdk-datastore-emulator=160.0.0-0
+    google-cloud-sdk-app-engine-go=181.0.0-0 \
+    google-cloud-sdk-app-engine-python=181.0.0-0 \
+    google-cloud-sdk-datastore-emulator=181.0.0-0
 
 # Install AWS
 RUN pip install awscli
@@ -43,4 +43,4 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
     && apt-get update --quiet
 
 # Install Bazel
-RUN apt-get install --quiet --yes bazel
+RUN apt-get install --quiet --yes bazel=0.8.0
