@@ -13,7 +13,8 @@ RUN apt-get update --quiet \
     python-dev \
     python-setuptools \
     python-pip \
-    tzdata
+    tzdata \
+    wget
 
 # Configure GCloud
 RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" \
@@ -36,11 +37,11 @@ RUN apt-get install --quiet --yes \
 # Install AWS
 RUN pip install awscli
 
-# Configure Bazel
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" \
-    | tee /etc/apt/sources.list.d/bazel.list \
-    && curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
-    && apt-get update --quiet
+# Download Bazel 0.5.4
+RUN wget https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_0.5.4_amd64.deb
 
-# Install Bazel
-RUN apt-get install --quiet --yes bazel=0.8.0
+# Install Bazel 0.5.4
+RUN apt-get install --quiet --yes ./bazel_0.5.4_amd64.deb
+
+# Remove Bazel deb
+RUN rm bazel_0.5.4_amd64.deb
