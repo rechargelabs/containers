@@ -37,11 +37,11 @@ RUN apt-get install --quiet --yes \
 # Install AWS
 RUN pip install awscli
 
-# Download Bazel 0.5.4
-RUN wget https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_0.5.4_amd64.deb
+# Download Bazel 0.9.0
+RUN wget https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_0.9.0_amd64.deb
 
-# Install Bazel 0.5.4
-RUN apt-get install --quiet --yes ./bazel_0.5.4_amd64.deb
+# Install Bazel 0.9.0
+RUN apt-get install --quiet --yes ./bazel_0.9.0_amd64.deb
 
 # Remove Bazel deb
-RUN rm bazel_0.5.4_amd64.deb
+RUN rm bazel_0.9.0_amd64.deb
