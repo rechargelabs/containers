@@ -1,6 +1,9 @@
 # Use lastest Ubuntu LTS
 FROM ubuntu:16.04
 
+ENV BAZEL_VERSION 0.14.1
+ENV GCLOUD_VERSION 181.0.0-0
+
 # Install base packages
 # Inspired by https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian/Dockerfile
 RUN apt-get update --quiet \
@@ -22,26 +25,26 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
     && apt-get update
 
-# Install GCloud 181.0.0-0
-RUN apt-get install --quiet --yes google-cloud-sdk=181.0.0-0 \
+# Install GCloud
+RUN apt-get install --quiet --yes "google-cloud-sdk=${GCLOUD_VERSION}" \
     && gcloud config set core/disable_usage_reporting true \
     && gcloud config set component_manager/disable_update_check true \
     && gcloud config set metrics/environment github_docker_image
 
-# Install GCloud Components 181.0.0-0
+# Install GCloud Components
 RUN apt-get install --quiet --yes \
-    google-cloud-sdk-app-engine-go=181.0.0-0 \
-    google-cloud-sdk-app-engine-python=181.0.0-0 \
-    google-cloud-sdk-datastore-emulator=181.0.0-0
+    "google-cloud-sdk-app-engine-go=${GCLOUD_VERSION}" \
+    "google-cloud-sdk-app-engine-python=${GCLOUD_VERSION}" \
+    "google-cloud-sdk-datastore-emulator=${GCLOUD_VERSION}"
 
 # Install AWS
 RUN pip install awscli
 
-# Download Bazel 0.9.0
-RUN wget https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_0.9.0_amd64.deb
+# Download Bazel
+RUN wget "https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_${BAZEL_VERSION}_amd64.deb"
 
-# Install Bazel 0.9.0
-RUN apt-get install --quiet --yes ./bazel_0.9.0_amd64.deb
+# Install Bazel
+RUN apt-get install --quiet --yes "./bazel_${BAZEL_VERSION}_amd64.deb"
 
 # Remove Bazel deb
-RUN rm bazel_0.9.0_amd64.deb
+RUN rm "bazel_${BAZEL_VERSION}_amd64.deb"
