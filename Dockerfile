@@ -1,8 +1,8 @@
 # Use lastest Ubuntu LTS
 FROM ubuntu:16.04
 
-ENV BAZEL_VERSION 0.15.0
-ENV GCLOUD_VERSION 181.0.0-0
+ENV BAZEL_VERSION 0.18.0
+ENV GCLOUD_VERSION 222.0.0-0
 
 # Install base packages
 # Inspired by https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian/Dockerfile
