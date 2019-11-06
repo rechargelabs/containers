@@ -1,4 +1,4 @@
-# Use lastest Ubuntu LTS minimum
+# Use latest Ubuntu LTS minimum
 FROM ubuntu:18.04
 
 ARG TZ=America/Los_Angeles
@@ -33,7 +33,7 @@ RUN apt-get -qqy update && apt-get install -qqy \
         google-cloud-sdk-datastore-emulator=${CLOUD_SDK_VERSION}-0 \
     && gcloud config set core/disable_usage_reporting true \
     && gcloud config set component_manager/disable_update_check true \
-    && gcloud config set metrics/environment true 
+    && gcloud config set metrics/environment true
 
 # Bazel
 RUN curl -O "https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_${BAZEL_VERSION}_amd64.deb" && \
