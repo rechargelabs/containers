@@ -1,50 +1,44 @@
-# Use lastest Ubuntu LTS
-FROM ubuntu:16.04
+# Use latest Ubuntu LTS minimum
+FROM ubuntu:18.04
 
-ENV BAZEL_VERSION 0.18.0
-ENV GCLOUD_VERSION 222.0.0-0
+ARG TZ=America/Los_Angeles
+ARG DEBIAN_FRONTEND=noninteractive
 
-# Install base packages
+ARG CLOUD_SDK_VERSION=257.0.0
+ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION
+
+ARG BAZEL_VERSION=0.28.0
+
+# Get GCloud SDK
 # Inspired by https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian/Dockerfile
-RUN apt-get update --quiet \
-    && apt-get install --quiet --yes \
-    apt-transport-https \
-    curl \
-    gcc \
-    git \
-    lsb-release \
-    python-dev \
-    python-setuptools \
-    python-pip \
-    tzdata \
-    wget
-
-# Configure GCloud
-RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" \
-    && echo "deb https://packages.cloud.google.com/apt ${CLOUD_SDK_REPO} main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
-    && apt-get update
-
-# Install GCloud
-RUN apt-get install --quiet --yes "google-cloud-sdk=${GCLOUD_VERSION}" \
+RUN apt-get -qqy update && apt-get install -qqy \
+        apt-transport-https \
+        curl \
+        gcc \
+        git \
+        gnupg \
+        lsb-release \
+        openssh-client \
+        python-dev \
+        python-pip \
+        tzdata \
+    && pip install -U crcmod   && \
+    export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
+    echo "deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" > /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get update && \
+    apt-get install -y google-cloud-sdk=${CLOUD_SDK_VERSION}-0 \
+        google-cloud-sdk-app-engine-python=${CLOUD_SDK_VERSION}-0 \
+        google-cloud-sdk-app-engine-go=${CLOUD_SDK_VERSION}-0 \
+        google-cloud-sdk-datastore-emulator=${CLOUD_SDK_VERSION}-0 \
     && gcloud config set core/disable_usage_reporting true \
     && gcloud config set component_manager/disable_update_check true \
-    && gcloud config set metrics/environment github_docker_image
+    && gcloud config set metrics/environment true
 
-# Install GCloud Components
-RUN apt-get install --quiet --yes \
-    "google-cloud-sdk-app-engine-go=${GCLOUD_VERSION}" \
-    "google-cloud-sdk-app-engine-python=${GCLOUD_VERSION}" \
-    "google-cloud-sdk-datastore-emulator=${GCLOUD_VERSION}"
+# Bazel
+RUN curl -O "https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_${BAZEL_VERSION}_amd64.deb" && \
+    apt-get install --quiet --yes "./bazel_${BAZEL_VERSION}_amd64.deb" && \
+    rm "bazel_${BAZEL_VERSION}_amd64.deb"
 
 # Install AWS
 RUN pip install awscli
-
-# Download Bazel
-RUN wget "https://storage.googleapis.com/bazel-apt/pool/jdk1.8/b/bazel/bazel_${BAZEL_VERSION}_amd64.deb"
-
-# Install Bazel
-RUN apt-get install --quiet --yes "./bazel_${BAZEL_VERSION}_amd64.deb"
-
-# Remove Bazel deb
-RUN rm "bazel_${BAZEL_VERSION}_amd64.deb"
